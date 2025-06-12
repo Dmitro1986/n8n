@@ -1,15 +1,5 @@
-services:
-  - type: web
-    name: n8n-app
-    env: node
-    buildCommand: npm install
-    startCommand: npm start
-    envVars:
-      - key: N8N_HOST
-        value: 0.0.0.0
-      - key: N8N_PORT
-        value: 10000
-      - key: N8N_PROTOCOL
-        value: https
-      - key: NODE_ENV
-        value: production
+node_modules/
+.env
+.n8n/
+*.log
+.DS_Store
