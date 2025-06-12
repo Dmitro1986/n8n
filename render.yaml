@@ -1,0 +1,70 @@
+services:
+  # A Docker web service
+  - type: web
+    name: n8n
+    env: docker
+    dockerImage: n8n-io/n8n:latest
+    healthCheckPath: /healthz
+    # Set billing to the lowest tier that offers background workers
+    # See https://render.com/pricing
+    plan: starter
+    # A 10GB persistent disk for storing the database and other data
+    # See https://render.com/docs/disks
+    disks:
+      - name: n8n-data
+        mountPath: /data
+        sizeGB: 10
+    envVars:
+      # A unique encryption key for securing credentials.
+      # You can generate a new one with `openssl rand -hex 32`
+      # DO NOT CHANGE THIS ONCE SET!
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+      - key: N8N_HOST
+        fromService:
+          type: web
+          name: n8n
+          property: host
+      # The following env vars are set for the Render PostgreSQL service.
+      # See https://render.com/docs/databases#connecting-from-a-render-service
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromService:
+          type: psql
+          name: n8n-db
+          property: host
+      - key: DB_POSTGRESDB_DATABASE
+        fromService:
+          type: psql
+          name: n8n-db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromService:
+          type: psql
+          name: n8n-db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromService:
+          type: psql
+          name: n8n-db
+          property: password
+      - key: DB_POSTGRESDB_PORT
+        fromService:
+          type: psql
+          name: n8n-db
+          property: port
+      # Set the web-hook URL to the public URL of this service
+      - key: WEBHOOK_URL
+        value: https://${RENDER_EXTERNAL_URL}
+      # Set the timezone
+      - key: GENERIC_TIMEZONE
+        value: Europe/Moscow
+
+  # A PostgreSQL database
+  - type: psql
+    name: n8n-db
+    # Set the database version
+    # See https://render.com/docs/postgresql#postgresql-version
+    databaseName: n8n
+    ipAllowList: [] # only allow internal connections
