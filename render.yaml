@@ -62,7 +62,7 @@ services:
         value: Europe/Moscow
 
   # A PostgreSQL database
-  - type: psql
+  - type: psql  # <--- ВОТ ЭТО МЕСТО МЫ ИСПРАВИЛИ
     name: n8n-db
     # Set the database version
     # See https://render.com/docs/postgresql#postgresql-version
