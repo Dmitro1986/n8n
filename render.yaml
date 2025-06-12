@@ -1,5 +1,4 @@
 services:
-  # n8n Web Service
   - type: web
     name: n8n
     env: docker
@@ -46,8 +45,7 @@ services:
       - key: WEBHOOK_URL
         value: https://${RENDER_EXTERNAL_URL}
 
-  # PostgreSQL Database
   - type: psql
     name: n8n-db
     databaseName: n8n
-    ipAllowList: [] # aAllowlist is empty, only internal connections are allowed
+    ipAllowList: []
